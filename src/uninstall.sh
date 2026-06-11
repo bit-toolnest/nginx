@@ -1,21 +1,27 @@
 #!/bin/bash
 set -e
 
-echo "=== Dummy Uninstaller Script ==="
-echo "This script should remove all components installed by install.sh."
+# uninstaller.sh — Uninstall Nginx if installed
 
-# Example steps (replace with real commands):
-# 1. Stop services
-#    sudo systemctl stop tool.service
-#    sudo systemctl disable tool.service
+# Check if nginx is installed
+if command -v nginx >/dev/null 2>&1; then
+    echo "Nginx detected. Removing..."
 
-# 2. Remove system packages
-#    sudo apt remove --purge -y <package>
+    # Stop and disable nginx service
+    sudo systemctl stop nginx || true
+    sudo systemctl disable nginx || true
 
-# 3. Clean environment variables
-#    sudo sed -i '/TOOL_HOME=/d' /etc/environment
+    # Remove nginx package
+    sudo apt-get remove --purge -y nginx nginx-common nginx-core
 
-# 4. Delete files and directories
-#    sudo rm -rf /opt/tool
+    # Clean up unused dependencies
+    sudo apt-get autoremove -y
+    sudo apt-get clean
 
-echo "✅ Uninstallation complete (dummy run)"
+    # Optionally remove leftover config/log directories
+    sudo rm -rf /etc/nginx /var/log/nginx /var/lib/nginx
+
+    echo "Nginx has been uninstalled."
+else
+    echo "Nginx is not installed. Nothing to remove."
+fi
