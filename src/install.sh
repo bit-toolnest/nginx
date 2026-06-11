@@ -1,18 +1,26 @@
 #!/bin/bash
 set -e
 
-echo "=== Dummy Installer Script ==="
-echo "This script should install all required components for the tool."
+# install.sh — Install Nginx if not already installed
 
-# Example steps (replace with real commands):
-# 1. Install system packages
-#    sudo apt update && sudo apt install -y <package>
+# Check if nginx is installed
+if ! command -v nginx >/dev/null 2>&1; then
+    echo "Nginx not found. Installing..."
 
-# 2. Configure environment variables
-#    echo "export TOOL_HOME=/opt/tool" | sudo tee -a /etc/environment
+    # Update package index
+    sudo apt-get update -y
 
-# 3. Start services or background processes
-#    sudo systemctl enable tool.service
-#    sudo systemctl start tool.service
+    # Install nginx
+    sudo apt-get install -y nginx
 
-echo "✅ Installation complete (dummy run)"
+    echo "Nginx installation complete."
+else
+    echo "Nginx is already installed."
+fi
+
+# Ensure nginx service is enabled and started
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+# Show status
+sudo systemctl status nginx --no-pager
