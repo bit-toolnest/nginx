@@ -22,5 +22,6 @@ fi
 sudo systemctl enable nginx
 sudo systemctl start nginx
 
-# Show status
-sudo systemctl status nginx --no-pager
+# Show status in a non-blocking way
+sudo systemctl is-active --quiet nginx && echo "Nginx is active" || echo "Nginx is not active"
+
